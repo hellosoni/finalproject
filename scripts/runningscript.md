@@ -18,6 +18,7 @@ fastq-dump --split-files SRR9113335
 fastq-dump --split-files SRR9113334
 
 #add changes to the folder and push online
+git add
 git status
 git commit -m " "
 git push
