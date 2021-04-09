@@ -19,10 +19,29 @@ cd trimming
 
 /fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/bbduk.sh in1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw/SRR9113336_1.fastq  in2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw/SRR9113336_2.fastq out1=SRR9113336_1_clean.fastq out2=SRR9113336_2_clean.fastq ref=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/adapters_illumina.fa k=23 mink=6 hdist=1 t=28 ktrim=r trimq=15 maq=15 qtrim=r minlen=50 tpe tbo overwrite=TRUE
 
+#Clean out duplication
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/SRR9113334_1_clean.fastq out=SRR9113334_1_clean_nodup.fastq
+
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/SRR9113334_2_clean.fastq out=SRR9113334_2_clean_nodup.fastq
+
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/SRR9113335_1_clean.fastq out=SRR9113335_1_clean_nodup.fastq
+
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/SRR9113335_2_clean.fastq out=SRR9113335_2_clean_nodup.fastq
+
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/SRR9113336_1_clean.fastq out=SRR9113336_1_clean_nodup.fastq
+
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/SRR9113336_2_clean.fastq out=SRR9113336_2_clean_nodup.fastq
+
 #Create .gitignore file for the trimmed reads:
 echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming" > .gitignore
 echo "*fastq" >> .gitignore
 echo "*fa" >> .gitignore
+git add .gitignore
+git commit -m "Added a gitignore file"
+
+#Create .gitignore file for the no duplicated reads:
+echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates" > .gitignore
+echo "*fastq" >> .gitignore
 git add .gitignore
 git commit -m "Added a gitignore file"
 ```
