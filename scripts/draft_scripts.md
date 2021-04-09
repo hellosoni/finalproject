@@ -16,7 +16,7 @@ fastq-dump --split-files SRR9113335
 fastq-dump --split-files SRR9113334
 
 #Create .gitignore file for the SRAs:
-echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/data_raw" > .gitignore
+echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw" > .gitignore
 echo "*fastq" >> .gitignore
 git add .gitignore
 git commit -m "Added a gitignore file"
@@ -25,7 +25,7 @@ git commit -m "Added a gitignore file"
 # Unzip the ref genome:
 gunzip Gmax_275_v2.0.fa.gz
 #Add a gitignore for this file:
-echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/refgenome" > .gitignore
+echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/refgenome" > .gitignore
 echo "*fa" >> .gitignore
 git add .gitignore
 git commit -m "Added a gitignore file for ref genome"
