@@ -19,18 +19,9 @@ BiocManager::install("Rbowtie2")
 BiocManager::install("edgeR")
 quit()
 ```
-Install FastQC
+Running
 ```
-cd ~/<YOUROSCID>/<YOURDIR>/
-mkdir softwares
-cd ~/<YOUROSCID>/<YOURDIR>/softwares
-wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
-unzip fastqc_v0.11.9.zip
-rm fastqc_v0.11.9.zip
-cd FastQC
-chmod +x fastqc
-./fastqc
-cd ..
+module load fastqc/0.11.8
 ```
 Install BBTools
 ```
@@ -47,6 +38,14 @@ echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/softwares/FastQC/" > .giti
 echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/softwares/bbmap/" > .gitignore
 git add .gitignore
 git commit -m "Added a gitignore for softwares folder"
+
+#Install STAR Aligner
+cd ~/software/
+conda create -y -n star-env -c bioconda star
+
+# Note: For MultiQC 
+module load python/3.6-conda5.2
+source activate multiqc-env
 
 ```
 
