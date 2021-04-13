@@ -14,7 +14,7 @@ source activate star-env
 
 STAR --runThreadN 20 \
 --genomeDir /fs/ess/PAS1855/users/nghinguyen/FinalProject/STARindexed_ref \
---readFilesIn /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113334_1_clean_nodup.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113334_2_clean_nodup.fastq] \
+--readFilesIn /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113334_1_clean_nodup.fastq, /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113334_2_clean_nodup.fastq \
 --outFileNamePrefix /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/SRR9113334_ \
 --outSAMtype BAM SortedByCoordinate \
 --outSAMunmapped Within \
@@ -22,7 +22,7 @@ STAR --runThreadN 20 \
 
 STAR --runThreadN 20 \
 --genomeDir /fs/ess/PAS1855/users/nghinguyen/FinalProject/STARindexed_ref \
---readFilesIn /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113335_1_clean_nodup.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113335_2_clean_nodup.fastq] \
+--readFilesIn /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113335_1_clean_nodup.fastq, /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113335_2_clean_nodup.fastq \
 --outFileNamePrefix /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/SRR9113335_ \
 --outSAMtype BAM SortedByCoordinate \
 --outSAMunmapped Within \
@@ -30,7 +30,7 @@ STAR --runThreadN 20 \
 
 STAR --runThreadN 20 \
 --genomeDir /fs/ess/PAS1855/users/nghinguyen/FinalProject/STARindexed_ref \
---readFilesIn /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113336_1_clean_nodup.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113336_2_clean_nodup.fastq] \
+--readFilesIn /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113336_1_clean_nodup.fastq, /fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113336_2_clean_nodup.fastq  \
 --outFileNamePrefix /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/SRR9113336_ \
 --outSAMtype BAM SortedByCoordinate \
 --outSAMunmapped Within \

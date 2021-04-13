@@ -14,6 +14,7 @@ STAR --runThreadN 28 \
 --genomeSAindexNbases 13
 --sjdbOverhang 99
 #Note may be should submit script to SLURM using the star_submit.sh script
+sbatch starindex_submit.sh
 
 # Run the mapping
 mkdir results
@@ -22,12 +23,12 @@ mkdir STAR
 
 STAR --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
 --runThreadN 20 \
---readFilesIn /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/no_duplicates/SRR9113334_1_clean_nodup.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/SRR9113334_2_clean_nodup.fastq] \
---outFileNamePrefix /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/STAR/SRR9113334_, \
+--readFilesIn /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/no_duplicates/<READID>_1_clean_nodup.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_2_clean_nodup.fastq] \
+--outFileNamePrefix /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/STAR/<READID>_, \
 --outSAMtype BAM SortedByCoordinate \
 
 #Again, make a star_submit.sh file to submit as a SLURM job
-
+sbatch star_submit.sh
 ```
 
 
