@@ -1,0 +1,63 @@
+#RNASeq workflow with FASTQ files as input and a count table as output
+
+SAMPLE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake/data"
+REF_FA =" refgenome/Gmax_275_v2.0.fa"
+SAMPLES, = glob_wildcards(SAMPLE_DIR + "/{sample}_1.fastq")
+R1 = '{sample}_1.fastq'
+R2 = '{sample}_2.fastq'
+
+
+rule all:
+    """
+    input:
+        "res/count_table.txt",
+         expand("res/{SRR}.fastqc.html", R1,R2 =SAMPLES)
+
+rule trim:
+    input:
+        "data/{SRR}.fastq",
+    output:
+        "res/{SRR}_trim.fastq",
+    log:
+        "log/trim/{SRR}.log",
+    shell:
+        "scripts/trim.sh {input} >{output} 2>{log}"
+
+
+rule map:
+    """
+    Map the trimmed FASTQ files to a reference genome.
+    """
+    input:
+        fastq="res/{SRR}_trim.fastq",
+        ref=REF_FA,
+    output:
+        "res/{SRR}.bam",
+log:
+        "log/map/{SRR}.log",
+  shell:
+   "scripts/map.sh {input.fastq} {input.ref} >{output} 2>{log}"
+
+rule count:
+    """
+    From the BAM files, create a gene count table.
+    """
+    input:
+        expand("res/{SRR}.bam", SRR=SAMPLES),
+    output:
+        "res/count_table.txt",
+      log:
+        "log/count/count.log",
+    shell:
+        "scripts/count.sh {input} >{output} 2>{log}"
+
+rule fastqc:
+    input:
+        "data/{SRR}.fastq",
+    output:
+        "res/{SRR}.fastqc.html",
+    log:
+        "log/fastqc/{SRR}.log",
+    shell:
+        "scripts/fastqc.sh {input} res &>{log}"
+

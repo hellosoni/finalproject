@@ -1,0 +1,8 @@
+cluster: "sbatch --account={resources.account}
+                 --time={resources.time_min}
+                 --mem={resources.mem_mb}
+                 --cpus-per-task={resources.cpus}
+                 --output=log/slurm-{rule}_{wildcards}.out"
+default-resources: [cpus=1, mem_mb=1000, time_min=5, account=PAS1855]
+jobs: 100
+latency-wait: 30
