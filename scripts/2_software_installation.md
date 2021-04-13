@@ -33,9 +33,9 @@ rm BBMap_38.90.tar.gz
 bash ./bbmap/bbmerge.sh
 
 ##Create .gitignore file for the softwares:
-echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/softwares/" > .gitignore
-echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/softwares/FastQC/" > .gitignore
-echo "/fs/ess/PAS1855/users/nghinguyen/Final\ Project/softwares/bbmap/" > .gitignore
+echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/" > .gitignore
+echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/FastQC/" > .gitignore
+echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/" > .gitignore
 git add .gitignore
 git commit -m "Added a gitignore for softwares folder"
 
@@ -43,9 +43,6 @@ git commit -m "Added a gitignore for softwares folder"
 cd ~/software/
 conda create -y -n star-env -c bioconda star
 
-# Note: For MultiQC 
-module load python/3.6-conda5.2
-source activate multiqc-env
 
 ```
 
