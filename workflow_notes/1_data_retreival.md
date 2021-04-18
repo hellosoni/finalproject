@@ -27,4 +27,7 @@ echo "*fastq" >> .gitignore
 git add .gitignore
 git commit -m "Added a gitignore file"
 ```
-
+#Alternately:
+Download using script with a list of SRR needed
+Make a list of SRR number SRR_list.txt
+Then make 2 scripts inner_script.sh and sra_fqdump.sh to run as jobs in SLURM
