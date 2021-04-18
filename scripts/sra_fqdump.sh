@@ -9,7 +9,7 @@
 cd /fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw
 
 module load sratoolkit
-for srr in $(cat SRR_list.txt)
+for srr in $(cat /fs/ess/PAS1855/users/nghinguyen/FinalProject/scripts/SRR_list.txt)
 do 
 sbatch inner_script.slurm $srr
 done
