@@ -4,7 +4,8 @@
 #Run FastQC
 mkdir QC
 module load fastqc/0.11.8
-/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/softwares/FastQC/fastqc --threads 2 /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_1.fastq /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_2.fastq --outdir=QC --outdir=QC
+fastqc --threads 2 /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_1.fastq /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_2.fastq --outdir=QC --outdir=QC
+# Or alternately using the fastq_run script to run as SLURM job.
 
 
 #Add .gitignore for QC files

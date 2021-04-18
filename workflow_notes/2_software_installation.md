@@ -37,8 +37,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("Rsubread")
-BiocManager::install("Rbowtie2")
-BiocManager::install("edgeR")
 quit()
 ```
 
