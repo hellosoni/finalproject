@@ -1,17 +1,22 @@
-#RNASeq workflow with FASTQ files as input and a count table as output
+" " "
+RNASeq workflow with FASTQ files as input and a count table as output
+Nghi Nguyen
+" " "
 
-SAMPLE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake/data"
-REF_FA =" refgenome/Gmax_275_v2.0.fa"
-SAMPLES, = glob_wildcards(SAMPLE_DIR + "/{sample}_1.fastq")
-R1 = '{sample}_1.fastq'
-R2 = '{sample}_2.fastq'
+BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake"
+
+REF_FA = WDIR + "refgenome/Gmax_275_v2.0.fa"
+
+SAMPLES, = glob_wildcards(BASE_DIR + "/{sample}_1.fastq")
+
+READS=["1", "2"]
 
 
 rule all:
     """
     input:
         "res/count_table.txt",
-         expand("res/{SRR}.fastqc.html", R1,R2 =SAMPLES)
+         expand("res/{sample}_{read}.fastqc.html", sample=SAMPLES, read=READS)
 
 rule trim:
     input:
@@ -29,14 +34,16 @@ rule map:
     Map the trimmed FASTQ files to a reference genome.
     """
     input:
-        fastq="res/{SRR}_trim.fastq",
-        ref=REF_FA,
+        R1=data/{sample}_1.fastq 
+        R2=data/{sample}_2.fastq
+        ref_dir=REF_FA,
+        out_prefix=?
     output:
         "res/{SRR}.bam",
 log:
         "log/map/{SRR}.log",
   shell:
-   "scripts/map.sh {input.fastq} {input.ref} >{output} 2>{log}"
+  shell: star_submit.sh {input.R1} {input.R2} {input.refdir} {input.out_prefix}
 
 rule count:
     """
