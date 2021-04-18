@@ -1,7 +1,0 @@
-Module	Section	Sample Name	Source
-FastQC	all_sections	SRR9113336_1	/fs/ess/PAS1855/users/nghinguyen/FinalProject/QC/SRR9113336_1_fastqc.zip
-FastQC	all_sections	SRR9113334_1	/fs/ess/PAS1855/users/nghinguyen/FinalProject/QC/SRR9113334_1_fastqc.zip
-FastQC	all_sections	SRR9113336_2	/fs/ess/PAS1855/users/nghinguyen/FinalProject/QC/SRR9113336_2_fastqc.zip
-FastQC	all_sections	SRR9113335_2	/fs/ess/PAS1855/users/nghinguyen/FinalProject/QC/SRR9113335_2_fastqc.zip
-FastQC	all_sections	SRR9113335_1	/fs/ess/PAS1855/users/nghinguyen/FinalProject/QC/SRR9113335_1_fastqc.zip
-FastQC	all_sections	SRR9113334_2	/fs/ess/PAS1855/users/nghinguyen/FinalProject/QC/SRR9113334_2_fastqc.zip
