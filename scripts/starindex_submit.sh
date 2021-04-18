@@ -12,7 +12,8 @@ source activate star-env
 
 STAR --runThreadN 28 \
 --runMode genomeGenerate \
---genomeDir /fs/ess/PAS1855/users/nghinguyen/FinalProject/STARindexed_ref \
---genomeFastaFiles /fs/ess/PAS1855/users/nghinguyen/FinalProject/refgenome/Gmax_275_v2.0.fa \
+--genomeDir /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/STARindexed_ref \
+--genomeFastaFiles /fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw/refgenome/Gmax_275_v2.0.fa \
+--sjdbGTFfile /fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw/refgenome/GCF_000004515.5_Glycine_max_v2.1_genomic.gff \
 --genomeSAindexNbases 13
 --sjdbOverhang 99
