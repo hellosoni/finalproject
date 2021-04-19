@@ -7,6 +7,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name STAR_map
 
+cd /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/STARres
 
 module load python/3.6-conda5.2
 source activate star-env
