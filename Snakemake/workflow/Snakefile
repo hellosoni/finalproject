@@ -3,49 +3,94 @@ RNASeq workflow with FASTQ files as input and a count table as output
 Nghi Nguyen
 " " "
 
-BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake"
+BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/"
+BBDUK=BASE_DIR  + "softwares/bbmap/bbduk.sh"
+REF_FA = BASE_DIR + "Snakemake/refgenome/Gmax_275_v2.0.fa"
+REF_GFF = BASE_DIR + "Snakemake/refgenome/Gmax_275_Wm82.a2.v1.gene.gff3"
 
-REF_FA = WDIR + "refgenome/Gmax_275_v2.0.fa"
-
-SAMPLES, = glob_wildcards(BASE_DIR + "/{sample}_1.fastq")
+SAMPLES, = glob_wildcards(BASE_DIR + "Snakemake/data/{SRR}_1.fastq")
 
 READS=["1", "2"]
 
 
-rule all:
-    """
+rule all: 
     input:
         "res/count_table.txt",
-         expand("res/{sample}_{read}.fastqc.html", sample=SAMPLES, read=READS)
-
-rule trim:
+         expand("res/{SRR}_{read}.fastqc.html", sample=SAMPLES, read=READS)
+         
+rule fastqc:
     input:
         "data/{SRR}.fastq",
     output:
-        "res/{SRR}_trim.fastq",
-    log:
-        "log/trim/{SRR}.log",
+        "res/{SRR}.fastqc.html",
+
     shell:
-        "scripts/trim.sh {input} >{output} 2>{log}"
+        "scripts/fastqc.sh {input} res &>{log}"
 
 
-rule map:
+rule bbduk adapter trimming:
+    input:
+        adapters=BASE_DIR + "refgenome/adapters.fa"
+        R1= BASE_DIR + "data/{SRR}_1.fastq", R2= BASE_DIR + "data/{SRR}_2.fastq"
+
+    output:
+        R1= BASE_DIR + "res/{SRR}_adtrimmed_1.fastq", R2= BASE_DIR + "res/{SRR}_adtrimmed_2.fastq"
+   
+    shell:
+     BBDUK in1="{input.R1}" in2="{input.R2}" out1="{output.R1}" out2="{output.R2}" \
+         ref="{input.adapters}"  ktrim=r k=23 mink=11 hdist=1 tpe tbo
+
+
+rule bbduk quality trimming:
+    input:
+        R1= BASE_DIR + "res/{SRR}_adtrimmed_1.fastq", R2= BASE_DIR + "res/{SRR}_adtrimmed_2.fastq"
+
+    output:
+        R1= BASE_DIR + "res/{SRR}_qttrimmed_1.fastq", R2= BASE_DIR + "res/{SRR}_qttrimmed_2.fastq"
+   
+    shell:
+     BBDUK -Xmx1g  in1="{input.R1}" in2="{input.R2}" out1="{output.R1}" out2="{output.R2}" \
+      k qtrim=r trimq=10
+
+
+rule STAR index:
+    input:
+    fa=REF_FA
+    gff=REF_GFF
+    output= BASE_DIR+("STARindex")
+threads: 20
+shell:
+            'mkdir {output} && '
+            'STAR --runThreadN {threads} '
+            '--runMode genomeGenerate '
+            '--genomeDir {output} '
+            '--genomeFastaFiles {input.fa} '
+            '--sjdbGTFfile {input.gff} '
+            '--sjdbOverhang 100'
+
+
+rule STAR map?:
     """
     Map the trimmed FASTQ files to a reference genome.
     """
     input:
-        R1=data/{sample}_1.fastq 
-        R2=data/{sample}_2.fastq
-        ref_dir=REF_FA,
-        out_prefix=?
+        R1=res/{SRR}_qttrimmed_1.fastq
+        R2=res/{SRR}_qttrimmed_2.fastq
+
     output:
         "res/{SRR}.bam",
-log:
-        "log/map/{SRR}.log",
-  shell:
-  shell: star_submit.sh {input.R1} {input.R2} {input.refdir} {input.out_prefix}
 
-rule count:
+  shell:
+            'mkdir {output} && '
+            'STAR --runThreadN {threads}'
+            '--genomeDir BASE_DIR+("STARindex")'
+           '--readFilesIn {input.R1} {input.R2} {input.refdir} {input.out_prefix} '
+           '--outFileNamePrefix {output}{params.prefix}'
+           '--outSAMtype BAM SortedByCoordinate'
+            ' --sjdbOverhang 100'
+
+
+rule feature count:
     """
     From the BAM files, create a gene count table.
     """
@@ -53,18 +98,12 @@ rule count:
         expand("res/{SRR}.bam", SRR=SAMPLES),
     output:
         "res/count_table.txt",
-      log:
-        "log/count/count.log",
-    shell:
-        "scripts/count.sh {input} >{output} 2>{log}"
 
-rule fastqc:
-    input:
-        "data/{SRR}.fastq",
-    output:
-        "res/{SRR}.fastqc.html",
-    log:
-        "log/fastqc/{SRR}.log",
     shell:
-        "scripts/fastqc.sh {input} res &>{log}"
+    "featureCounts \
+     -T 16 \
+    -p \
+     -t gene \
+     -a  \
+    -o ${OUTFILE}_counts.txt *.bam "
 
