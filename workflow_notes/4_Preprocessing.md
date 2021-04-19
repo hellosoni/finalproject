@@ -2,36 +2,28 @@
 
 ```
 #Ask for computing resources:
-qsub -I -l nodes=1:ppn=28 -l walltime=01:00:00 -A PAS1855
+qsub -I -l nodes=1:ppn=28 -l walltime=04:00:00 -A PAS1855
 
 #Make trimmed directory
 cd ~/FinalProject
 mkdir trimming no_duplicates
-
-#Identifying Illumina adapters
-cd trimming
-/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/softwares/bbmap/bbmerge.sh in1=/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/<READID>_1.fastq in2=/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/<READID>_2.fastq outa=adapters_illumina.fa
+#Note: There is adapter reference in bbmap/resources/
 
 #Adapter Trimming
-/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/softwares/bbmap/bbduk.sh in1=/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/<READID>_1.fastq  in2=/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/<READID>_2.fastq out1=<READID>_1_clean.fastq out2=<READID>_2_clean.fastq  ref=/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/trimming/adapters_illumina.fa k=23 mink=6 hdist=1 t=28 ktrim=r trimq=15 maq=15 qtrim=r minlen=50 tpe tbo overwrite=TRUE
+
+/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/bbduk.sh -Xmx1g in1=$i\_1.fastq in2=$i\_2.fastq out1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/${i##*/}\_clean_1.fastq out2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/${i##*/}\_clean_2.fastq ref=/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/resources/adapters.fa
+ ktrim=r k=23 mink=11 hdist=1 tpe tbo
 
 
-#Clean out duplication
-/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/<READID>_1_clean.fastq out=<READID>_1_clean_nodup.fastq
+#Quality trimming
+fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/bbduk.sh -Xmx1g in1=$i\_clean_1.fastq in2=$i\_clean_2.fastq out1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/${i##*/}\_cleanqt_1.fastq out2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/${i##*/}\_cleanqt_2.fastq qtrim=r trimq=10
 
-/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/clumpify.sh in=/fs/ess/PAS1855/users/nghinguyen/FinalProject/trimming/<READID>_2_clean.fastq out=<READID>_2_clean_nodup.fastq
 
 
 #Create .gitignore file for the trimmed reads:
-echo "/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/trimming" > .gitignore
+echo "/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/trimmed" > .gitignore
 echo "*fastq" >> .gitignore
 echo "*fa" >> .gitignore
-git add .gitignore
-git commit -m "Added a gitignore file"
-
-#Create .gitignore file for the no duplicated reads:
-echo "/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/no_duplicates" > .gitignore
-echo "*fastq" >> .gitignore
 git add .gitignore
 git commit -m "Added a gitignore file"
 ```

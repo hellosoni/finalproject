@@ -12,9 +12,12 @@ STAR --runThreadN 28 \
 --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
 --genomeFastaFiles /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/refgenome/Gmax_275_v2.0.fa \
 --genomeSAindexNbases 13
---sjdbOverhang 99
+
 #Note may be should submit script to SLURM using the star_submit.sh script
 sbatch starindex_submit.sh
+
+chmod u+x starindex_submit
+
 
 # Run the mapping
 mkdir results
