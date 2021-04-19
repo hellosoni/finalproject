@@ -7,6 +7,7 @@ cd STARindexed_ref
 
 module load python/3.6-conda5.2
 source activate star-env
+
 STAR --runThreadN 28 \
 --runMode genomeGenerate \
 --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
@@ -26,7 +27,8 @@ mkdir STAR
 
 STAR --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
 --runThreadN 20 \
---readFilesIn /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/no_duplicates/<READID>_1_clean_nodup.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_2_clean_nodup.fastq] \
+--runMode alignReads 
+--readFilesIn /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/<READID>__cleanqt_1.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_cleanqt_2.fastq] \
 --outFileNamePrefix /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/STAR/<READID>_, \
 --outSAMtype BAM SortedByCoordinate \
 
