@@ -11,18 +11,22 @@
 module load python/3.6-conda5.2
 source activate star-env
 
-R1="$1"
-R2="$2"
-OUT=$(basename ${R1} |cut -f 1 -d "_");
-dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/STARindexed_ref/Gmax_275_v2.0_star"
+for sample in {1..2}
+    do
+R1=$(ls /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/*_cleanqt_1.fastq)
+R2=$(ls /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/*_cleanqt_2.fastq)
+OUT=$(basename ${R1%%.*})
+dir="fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/STARindexed_ref/Gmax_275_v2.0_star"
+STAR \
+ --runMode alignReads \
+ --runThreadN 32 \
+ --genomeDir ${dir} \
+ --outFileNamePrefix ${OUT} \
+ --readFilesIn ${R1} ${R2}
 
-STAR --runThreadN 20 \
---runMode alignReads \
---genomeDir ${dir} \
---readFilesIn ${R1} ${R2} \
- --outFileNamePrefix ${OUT}_star \
---outSAMtype BAM SortedByCoordinate \
---outSAMunmapped Within \
---outSAMattributes Standard 
+done
+
+
+
 
 
