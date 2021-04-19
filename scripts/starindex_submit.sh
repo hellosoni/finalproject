@@ -10,9 +10,13 @@
 module load python/3.6-conda5.2
 source activate star-env
 
+FASTA="/fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw/refgenome/Gmax_275_v2.0.fa"
+dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/STARindexed_ref"
+mkdir -p ${dir}/${FASTA%.*}_star
+
 STAR --runThreadN 28 \
 --runMode genomeGenerate \
---genomeDir /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/STAR/STARindexed_ref \
---genomeFastaFiles /fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw/refgenome/Gmax_275_v2.0.fa \
+--genomeDir ${dir}/${FASTA%.*}_star \
+--genomeFastaFiles ${FASTA}  \
 --genomeSAindexNbases 13 \
---sjdbOverhang 99
+
