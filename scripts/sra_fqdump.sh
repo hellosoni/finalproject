@@ -6,10 +6,9 @@
 #SBATCH --cpus-per-task=1
 #SBATCH -J sra_download    
 
-cd /fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw
-
+list=$1
 module load sratoolkit
-for srr in $(cat /fs/ess/PAS1855/users/nghinguyen/FinalProject/scripts/SRR_list.txt)
+for srr in $(cat $list/SRR_list.txt)
 do 
 sbatch inner_script.slurm $srr
 done
