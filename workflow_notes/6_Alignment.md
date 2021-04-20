@@ -30,7 +30,7 @@ STAR --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
 --runMode alignReads 
 --readFilesIn /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/<READID>__cleanqt_1.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_cleanqt_2.fastq] \
 --outFileNamePrefix /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/STAR/<READID>_, \
---outSAMtype BAM SortedByCoordinate \
+--outSAMtype BAM SortedByCoordinate 
 
 #Again, make a star_submit.sh file to submit as a SLURM job
 sbatch star_submit.sh

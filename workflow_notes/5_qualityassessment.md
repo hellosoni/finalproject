@@ -7,7 +7,7 @@ qsub -I -l nodes=1:ppn=28 -l walltime=03:00:00 -A PAS1855
 #Quality control for trimmed reads
 mkdir Assessment
 module load fastqc/0.11.8
-fastqc -t 2 /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/no_duplicates/<READID>_1_clean_nodup.fastq /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/no_duplicates/<READID>_2_clean_nodup.fastq --outdir=.
+fastqc --threads 2 <YOUROSCID>/<YOURDIR>/results/trimmed/quality_trimmed/real/*_1.fastq <YOUROSCID>/<YOURDIR>results/trimmed/quality_trimmed/real/*_2.fastq --outdir=<YOUROSCID>/<YOURDIR>/results/Assessment
 
 
 #Create .gitignore file for the SRAs:

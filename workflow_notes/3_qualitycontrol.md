@@ -4,7 +4,8 @@
 #Run FastQC
 mkdir QC
 module load fastqc/0.11.8
-fastqc --threads 2 /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_1.fastq /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_2.fastq --outdir=QC --outdir=QC
+fastqc --threads 2 /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_1.fastq /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_2.fastq --outdir=QC 
+
 # Or alternately using the fastq_run script to run as SLURM job.
 
 
