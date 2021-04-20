@@ -31,6 +31,9 @@ STAR \
  --outFileNamePrefix ${OUT} \
  --readFilesIn ${R1} ${R2}
 
+ 
+
+
 
 
 

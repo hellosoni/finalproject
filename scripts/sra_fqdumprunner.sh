@@ -1,1 +1,0 @@
-list=/fs/ess/PAS1855/users/nghinguyen/FinalProject/scripts/SRR_list.txt
