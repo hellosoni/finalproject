@@ -6,9 +6,14 @@
 #SBATCH --cpus-per-task=1
 #SBATCH -J Quality_trimming
 
-cd /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed
 
-for i in `ls -1 /fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/adapter_trimmed/*_clean_1.fastq | sed 's/_clean_1.fastq/'` 
-do
-/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/bbduk.sh -Xmx1g in1=$i\_clean_1.fastq in2=$i\_clean_2.fastq out1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/${i##*/}\_cleanqt_1.fastq out2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/${i##*/}\_cleanqt_2.fastq qtrim=r trimq=10
-done
+in_dir=$1
+sample_ID=$2
+bbduk=$3
+out_dir=$4
+
+R1=${in_dir}/${sample_ID}_1.fastq
+R2=${in_dir}/${sample_ID}_2.fastq
+OUT=${out_dir}/${sample_ID}_qtclean
+
+${bbduk}/bbduk.sh in1=${R1} in2=${R2} out1=${OUT}_1.fastq  out2=${OUT}_2.fastq qtrim=r trimq=10

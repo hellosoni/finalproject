@@ -7,11 +7,13 @@
 #SBATCH -J Adapter_trimming
 
 in_dir=$1
-bbduk=$2
-for i in `ls -1 $in_dir/{sample_ID}_1.fastq | sed 's/_1.fastq/'` 
-do
+sample_ID=$2
+bbduk=$3
+out_dir=$4
+ref=$5
 
- $bbduk -Xmx1g in1=$i\_1.fastq in2=$i\_2.fastq out1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/adapter_trimmed/${i##*/}\_clean_1.fastq out2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/adapter_trimmed/${i##*/}\_clean_2.fastq ref=/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/resources/adapters.fa
- ktrim=r k=23 mink=11 hdist=1 tpe tbo
+R1=${in_dir}/${sample_ID}_1.fastq
+R2=${in_dir}/${sample_ID}_2.fastq
+OUT=${out_dir}/${sample_ID}_clean
 
-done
+${bbduk}/bbduk.sh in1=${R1} in2=${R2} out1=${OUT}_1.fastq  out2=${OUT}_2.fastq ref=${ref} ktrim=r k=23 mink=11 hdist=1 tpe tbo
