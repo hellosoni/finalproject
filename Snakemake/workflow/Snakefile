@@ -1,98 +1,152 @@
 " " "
-RNASeq workflow with FASTQ files as input and a count table as output
+RNASeq workflow with FASTQ files as input and an aligned sam files as output 
 Nghi Nguyen
 " " "
-BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/"
-BBDUK=BASE_DIR  + "softwares/bbmap/bbduk.sh"
-REF_FA = BASE_DIR + "Snakemake/refgenome/Gmax_275_v2.0.fa"
-REF_GFF = BASE_DIR + "Snakemake/refgenome/Gmax_275_Wm82.a2.v1.gene.gff3"
-SAMPLES, = glob_wildcards(BASE_DIR + "Snakemake/data/{SRR}_1.fastq")
+# Use the `join` function to create paths:
+from os.path import join
 
+# Workflow configuration file:
+configfile: "workflow/config.yaml"
+# Get settings from config file:
+IN_DIR=config["in_dir"]
+OUT_DIR=config["out_dir"]
+LOG_DIR=config["log_dir"]
+
+#Settings:
+BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject"
+BBDUK = BASE_DIR + "softwares/bbmap/"
+ADAPTER= BASE_DIR + "/softwares/bbmap/resources/adapters.fa"
+REF_FA = BASE_DIR + "/data_raw/refgenome/Gmax_275_v2.0.fa"
+
+# Samples and reads:
+SAMPLES, = glob_wildcards(join(IN_DIR, "{SRR}_1.fastq")).sample
 READS=["1", "2"]
+
+#Ouput directories:
+FASTQC_DIR=join(OUT_DIR, "fastqc")
+AD_TRIMMED=join(OUT_DIR, "adapter_trimmed")
+QT_TRIMMED=join(OUT_DIR, "quality_trimmed")
+FASTQC_ASM=join(OUT_DIR, "Assessment")
+STAR_INDEX=join(OUT_DIR,"Star_indexed")
+STAR_ALIGN=join(OUT_DIR,"Star_aligned")
+
+# Define local rules:
+localrules: all, clean  
+
+#Rules:
 
 rule all: 
     input:
-        "res/count_table.txt",
-         expand("res/{SRR}_{read}.fastqc.html", SRR=SAMPLES, read=READS)
-         
+        expand(STAR_ALIGN, "{SRR}_{read}_qttrimmed.fastq", SRR=SAMPLES, read=READS)
+
 rule fastqc:
+  """
+    A rule to run FastQC to QC the FASTQ files.
+    """
     input:
-        "data/{SRR}.fastq",
+       join(IN_DIR, "{SRR}_{read}.fastq"),
     output:
-        "res/{SRR}_fastqc.html",
+        join(FASTQC_DIR, "{SRR}_{read}_fastqc.html"),
+     log:
+        join(LOG_DIR, "fastqc_{SRR}_{read}.log"),
 
     shell:
-        "{BASE_DIR}/scripts/fastqc_run.sh {input} {output_dir} &> {log}. "
-
+       """
+        module load fastqc/0.11.8
+        fastqc {input} -o {FASTQC_DIR} &> {log}
+        """
 
 rule bbduk adapter trimming:
+"""
+A rule to trim adapters from reads using bbduk
+"""
     input:
-        adapters=BASE_DIR + "refgenome/adapters.fa",
-        R1= BASE_DIR + "data/{SRR}_1.fastq", R2= BASE_DIR + "data/{SRR}_2.fastq"
+        adapter= ADAPTER
+        R1= join(IN_DIR, "{SRR}_1.fastq"), R2= join(IN_DIR,"{SRR}_2.fastq")
 
     output:
-        R1= BASE_DIR + "res/{SRR}_adtrimmed_1.fastq", R2= BASE_DIR + "res/{SRR}_adtrimmed_2.fastq"
+        R1= join(AD_TRIMMED, "{SRR}_clean_1.fastq"), R2=  join(AD_TRIMMED, "{SRR}_clean_2.fastq")
+    log:
+    join(LOG_DIR, "adapter_trimmed/{SRR}_{read}_clean.log"),
    
     shell:
-        "{BASE_DIR}/scripts/adapter_trimming.sh -r {input.adapters} {input} > {output}"
-
+    " {BBUDK}/bbduk.sh in1=${input.R1} in2=${input.R2} out1=${output.R1}_1.fastq  out2=${output.R2}_2.fastq ref=${adapter} ktrim=r k=23 mink=11 hdist=1 tpe tbo &> {log}
 
 rule bbduk quality trimming:
+"""
+A rule to quality trimm reads using bbduk
+"""
     input:
-        R1= BASE_DIR + "res/{SRR}_adtrimmed_1.fastq", R2= BASE_DIR + "res/{SRR}_adtrimmed_2.fastq"
+        R1= join(AD_TRIMMED, "{SRR}_clean_1.fastq"), R2= join(AD_TRIMMED,"{SRR}_clean_2.fastq")
 
     output:
-        R1= BASE_DIR + "res/{SRR}_qttrimmed_1.fastq", R2= BASE_DIR + "res/{SRR}_qttrimmed_2.fastq"
-   
+        R1= join(QT_TRIMMED "{SRR}_cleanqt_1.fastq"), R2= join(QT_TRIMMED, "{SRR}_cleanqt_2.fastq")
+    log:
+     join(LOG_DIR, "quality_trimmed/{SRR}_{read}_cleanqt.log"),
     shell:
-        "{BASE_DIR}/scripts/quality_trimming.sh {input} > {output}"
+        "{BBUDK}/bbduk.sh  in1=${input.R1} in2=${input.R2} out1=${output.R1}_1.fastq  out2=${output.R2}_2.fastq qtrim=r trimq=10 &> {log}"
 
 rule fastqc assessment:
-     input:
-        "quality_trimmed/{SRR}.fastq",
+"""
+A rule to run FASTQC assessment for trimmed reads
+"""
+    input:
+       join(QT_TRIMMED, "{SRR}_{read}_cleanqt.fastq"),
     output:
-        "res/{SRR}_asfastqc.html",
+        join(FASTQC_ASM, "{SRR}_{read}_cleanqt_fastqc.html"),
+     log:
+        join(LOG_DIR, "Assessment/{SRR}_{read}.log"),
 
     shell:
-        "{BASE_DIR}/scripts/fastqc_run.sh {input} {output_dir} &> {log}."
-
-
+       """
+        module load fastqc/0.11.8
+        fastqc {input} -o {FASTQC_ASM} &> {log}
+        """
 
 rule STAR index:
-    input:
+"""
+A rule to index reference FASTA file
+"""
+input:
     fa=REF_FA,
-    gff=REF_GFF
-     
-    output:
-    output= BASE_DIR+("STARindex")
+ output:
+    output= join(STAR_INDEX, "Star_indexed")
 threads: 20
+conda:
+      ' module load python/3.6-conda5.2'
+        'source activate star-env'
 shell:
-       "{BASE_DIR}/scripts/starindex_submit.sh {input} > {output}"
+    'STAR --runThreadN 28 '
+'--runMode genomeGenerate '
+'--genomeDir {output} '
+'--genomeFastaFiles ${input.fa} '
+'--genomeSAindexNbases 13'
+ '&> {log}'
 
 rule STAR map:
     """
-    Map the trimmed FASTQ files to a reference genome.
+    A rule to map the trimmed FASTQ files to a reference genome.
     """
     input:
-        R1=res/{SRR}_qttrimmed_1.fastq,
-        R2=res/{SRR}_qttrimmed_2.fastq
-
+        ref=join(STAR_INDEX, "Star_indexed")
+        R1=join(QT_TRIMMED,"{SRR}_{read}_qttrimmed_1.fastq"),
+        R2=join(QT_TRIMMED,"{SRR}_{read}_qttrimmed_2.fastq"),
     output:
-        "res/{SRR}.bam",
-
+        R1=join(STAR_ALIGN,"{SRR}_{read}_qttrimmed_1.fastq"),
+        R2=join(STAR_ALIGN,"{SRR}_{read}_qttrimmed_2.fastq"),
+    log:
+        joim(LOG_DIR, "Star_aligned/{SRR}_{read}_qttrimmed.log")
+threads: 20
+conda:
+      ' module load python/3.6-conda5.2'
+        'source activate star-env'
   shell:
-       "{BASE_DIR}/scripts/star_submit.sh {input} > {output}"
+       'STAR --runMode alignReads'
+        '--runThreadN {threads}'
+        '--genomeDir ${ref}'
+         '--outFileNamePrefix ${OUT}'
+        '--readFilesIn ${R1} ${R2}'
+        '&> {log}'
 
 
-rule feature count:
-    """
-    From the BAM files, create a gene count table.
-    """
-    input:
-        expand("res/{SRR}.bam", SRR=SAMPLES),
-    output:
-        "res/count_table.txt",
-
-    shell:
-    "{BASE_DIR}/scripts/feature_count.sh {input} > {output}"  
 
