@@ -25,7 +25,7 @@ git commit -m "Added a gitignore for softwares folder"
 cd ~/software/
 conda create -y -n star-env -c bioconda star
 
-#Set up R and install Rsubread Rbowtie2 and edgeR
+#Set up R and install Rsubread 
 #Go to Home Directory
 
 cd #HOME
@@ -38,5 +38,11 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 
 BiocManager::install("Rsubread")
 quit()
+
+#Download directly from Sourceforge:
+wget https://sourceforge.net/projects/subread/files/latest/download/subread-2.0.2-source.tar
+
+tar -xvzf subread-2.0.2-source.tar
+rm subread-2.0.2-source.tar
 ```
 
