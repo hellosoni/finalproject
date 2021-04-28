@@ -1,0 +1,3 @@
+in_dir: "data"
+out_dir: "results"
+log_dir: "log"
