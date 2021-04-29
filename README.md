@@ -13,11 +13,14 @@ For each section of the pipeline, I created a set of scripts to run  on the SLUR
 
 
 ## Snakemake pipepine
-For Snakemake pipeline, I created a Snakefile with inputs, outputs and include the the scripts created above to run the entire pipeline. Then I also created a script named "snakemake_submit.sh" to run the Snakemake pipeline in SLURM. Both of these can be found in the /Snakemake/workflow folder.
+For Snakemake pipeline, I created a Snakefile with inputs, outputs and include the the scripts created above to run the entire pipeline. Then I also created a script named "snakemake_submit.sh" to run the Snakemake pipeline in SLURM. Both of these can be found in the "/Snakemake/workflow" folder. I also created two files fastqc.yml and star.yml in the "workflow/env/" folder that contains information for calling the two programs in SNakemake files.
 
 #Setting for the file paths I used are below. They can be replaced with your own directories. 
 
 BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/"
+
 BBDUK = BASE_DIR + "softwares/bbmap/"
+
 ADAPTER= BASE_DIR + "/softwares/bbmap/resources/adapters.fa"
+
 REF_FA = BASE_DIR + "/data_raw/refgenome/Gmax_275_v2.0.fa"
