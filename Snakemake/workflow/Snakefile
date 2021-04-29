@@ -6,16 +6,17 @@ Nghi Nguyen
 from os.path import join
 
 #Settings:
-BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/"
-BBDUK = BASE_DIR + "softwares/bbmap/"
-ADAPTER= BASE_DIR + "/softwares/bbmap/resources/adapters.fa"
-REF_FA = BASE_DIR + "/data_raw/refgenome/Gmax_275_v2.0.fa"
+BBDUK = "../softwares/bbmap/"
+ADAPTER= "../softwares/bbmap/resources/adapters.fa"
+REF_FA = "../data_raw/refgenome/Gmax_275_v2.0.fa"
 # Workflow configuration file:
-configfile: BASE_DIR +"Snakemake/workflow/config.yaml"
+configfile: "../workflow/config.yaml"
+
 # Get settings from config file:
 IN_DIR=config["in_dir"]
 OUT_DIR=config["out_dir"]
 LOG_DIR=config["log_dir"]
+
 # Samples and reads:
 SAMPLES = glob_wildcards(join(IN_DIR, "{sample}_1.fastq")).sample
 READS=["1", "2"]
@@ -29,116 +30,147 @@ STAR_INDEX=join(OUT_DIR,"Star_indexed")
 STAR_ALIGN=join(OUT_DIR,"Star_aligned")
 
 # Define local rules:
-localrules: all, clean  
+localrules: all
 
 #Rules:
 
 rule all:
-input: join(STAR_ALIGN,"{sample}_{read}_aligned.sam")
+    input:
+        expand(
+            "{star_align}/{sample}_Aligned.out.sam",
+            star_align=STAR_ALIGN,
+            sample=SAMPLES,
+        ),
+        expand(
+            "{fastqc_dir}/{sample}_{read}_fastqc.html",
+            fastqc_dir=FASTQC_DIR,
+            sample=SAMPLES,
+            read=READS
+        ),
+        expand(
+            "{fastqc_dir}/{sample}_{read}_cleanqt_fastqc.html",
+            fastqc_dir=FASTQC_ASM,
+            sample=SAMPLES,
+            read=READS
+        ),
 
 rule fastqc:
-"""
-A rule to run FastQC to QC the FASTQ files.
-"""
-input: \
-join (IN_DIR, "{sample}_{read}.fastq")
-output: \
-join (FASTQC_DIR, "{sample}_{read}_fastqc.html")
-log:\
-join (LOG_DIR, "fastqc_{sample}_{read}.log")
-conda: \
-"envs/fastqc.yml"
-shell:\
-"fastqc {input} -o {FASTQC_DIR} &> {log}"
+    """
+    A rule to run FastQC to QC the FASTQ files.
+    """
+    input:
+        join (IN_DIR, "{sample}_{read}.fastq"),
+    output:
+        join (FASTQC_DIR, "{sample}_{read}_fastqc.html"),
+    log:
+        join (LOG_DIR, "fastqc_{sample}_{read}.log"),
+    conda:
+        "../envs/fastqc.yml"
+    shell:
+        "fastqc {input} -o {FASTQC_DIR} &> {log}"
 
 
-rule bbduk adapter trimming:
-"""
-A rule to trim adapters from reads using bbduk
-"""
-input:\
-adapter= ({ADAPTER}
-R1= join(IN_DIR,"{sample}_1.fastq"), 
-R2= join(IN_DIR,"{sample}_2.fastq"),
+rule bbduk_adapter_trimming:
+    """
+    A rule to trim adapters from reads using bbduk
+    """
+    input:
+        adapter=ADAPTER,
+        R1= join(IN_DIR,"{sample}_1.fastq"), 
+        R2= join(IN_DIR,"{sample}_2.fastq"),
+    output:
+        R1= join(AD_TRIMMED,"{sample}_1_clean.fastq"),
+        R2= join(AD_TRIMMED, "{sample}_2_clean.fastq"),
+    log:
+        join(LOG_DIR, "adapter_trimmed/{sample}_clean.log"),
+    shell:
+        """
+        {BBDUK}/bbduk.sh  in1={input.R1} in2={input.R2} out1={output.R1} \
+            out2={output.R2} ref={input.adapter} ktrim=r k=23 mink=11 \
+            hdist=1 tpe tbo &> {log}
+        """
 
-output:\
-R1= join(AD_TRIMMED,"{sample}_clean_1.fastq")
-R2=  join(AD_TRIMMED, "{sample}_clean_2.fastq"),
-log:\
-join(LOG_DIR, "adapter_trimmed/{sample}_{read}_clean.log")
-   
-shell:\
-"{BBUDK}/bbduk.sh  in1=${input.R1} in2=${input.R2} out1=${output.R1}_1.fastq  out2=${output.R2}_2.fastq ref=${adapter} ktrim=r k=23 mink=11 hdist=1 tpe tbo &> {log}"
-
-
-rule bbduk quality trimming:
-"""
-A rule to quality trimm reads using bbduk
-"""
-input:\
-R1= join(AD_TRIMMED, "{sample}_clean_1.fastq")
-R2= join(AD_TRIMMED,"{sample}_clean_2.fastq")
-
-output:\
-R1= join(QT_TRIMMED, "{sample}_cleanqt_1.fastq"),
-R2= join(QT_TRIMMED, "{sample}_cleanqt_2.fastq"),
-
-log: \
-join(LOG_DIR, "quality_trimmed/{sample}_{read}_cleanqt.log")
-
-shell:\
-"{BBUDK}/bbduk.sh  in1=${input.R1} in2=${input.R2} out1=${output.R1}_1.fastq  out2=${output.R2}_2.fastq qtrim=r trimq=10 &> {log}"
+rule bbduk_quality_trimming:
+    """
+    A rule to quality trimm reads using bbduk
+    """
+    input:
+        R1= join(AD_TRIMMED, "{sample}_1_clean.fastq"),
+        R2= join(AD_TRIMMED,"{sample}_2_clean.fastq"),
+    output:
+        R1= join(QT_TRIMMED, "{sample}_1_cleanqt.fastq"),
+        R2= join(QT_TRIMMED, "{sample}_2_cleanqt.fastq"),
+    log:
+        join(LOG_DIR, "quality_trimmed/{sample}_cleanqt.log")
+    shell:
+        """
+        {BBDUK}/bbduk.sh  in1={input.R1} in2={input.R2} out1={output.R1} \
+        out2={output.R2} qtrim=r trimq=10 &> {log}
+        """
 
 rule fastqc assessment:
-"""
-A rule to run FASTQC assessment for trimmed reads
-"""
-conda: "envs/fastqc.yml"
-input:\
-join(QT_TRIMMED, "{sample}_{read}_cleanqt.fastq")
-output:\
-join(FASTQC_ASM, "{sample}_{read}_cleanqt_fastqc.html")
-log:\
-join(LOG_DIR, "Assessment/{sample}_{read}.log")
-shell:
-"fastqc {input} -o {FASTQC_ASM} &> {log}"
+    """
+    A rule to run FASTQC assessment for trimmed reads
+    """
+    conda:
+        "../envs/fastqc.yml"
+    input:
+        join(QT_TRIMMED, "{sample}_{read}_cleanqt.fastq")
+    output:
+        join(FASTQC_ASM, "{sample}_{read}_cleanqt_fastqc.html")
+    log:
+        join(LOG_DIR, "Assessment/{sample}_{read}.log")
+    shell:
+        "fastqc {input} -o {FASTQC_ASM} &> {log}"
 
 rule star_index:
-"""
-A rule to index reference FASTA file
-"""
-input:\
-fa=REF_FA
-output:\
-output= join(STAR_INDEX, "Star_indexed")
-conda: "envs/star.yml"
-threads: 20
-shell:\
-"STAR --runThreadN 28 \
---runMode genomeGenerate\
---genomeDir {output} \
---genomeFastaFiles ${input.fa} \
---genomeSAindexNbases 13 \
-&> {log}"
+    """
+    A rule to index reference FASTA file
+    """
+    input:
+        fa=REF_FA
+    output:
+        directory(join(STAR_INDEX, "Star_indexed"))
+    log:
+        join(LOG_DIR, "star_index.log")
+    conda:
+        "../envs/star.yml"
+    threads:
+        20
+    resources:
+        mem_mb=80000
+    shell:
+        """
+        STAR --runThreadN 28 --runMode genomeGenerate --genomeDir {output} \
+        --genomeFastaFiles {input.fa} --genomeSAindexNbases 13 &> {log}
+        """
 
 rule star_map:
-"""
-A rule to map the trimmed FASTQ files to a reference genome.
-"""
-input:\
-ref=join(STAR_INDEX, "Star_indexed")
-R1=join(QT_TRIMMED,"{sample}_{read}_qttrimmed_1.fastq"),
-R2=join(QT_TRIMMED,"{sample}_{read}_qttrimmed_2.fastq"),
-output:\
-output=join(STAR_ALIGN,"{sample}_{read}_aligned.sam")
-
-log:\
-joim(LOG_DIR, "Star_aligned/{sample}_{read}_qttrimmed.log")
-threads: 20
-conda: "envs/star.yml"
-shell:\
-"STAR --runMode alignReads \
---runThreadN {threads}\
---genomeDir ${ref}\
---outFileNamePrefix ${output}_aligned\
---readFilesIn ${input.R1} ${input.R2} &> {log}"
+    """
+    A rule to map the trimmed FASTQ files to a reference genome.
+    """
+    input:
+        ref=join(STAR_INDEX, "Star_indexed"),
+        R1= join(QT_TRIMMED, "{sample}_1_cleanqt.fastq"),
+        R2= join(QT_TRIMMED, "{sample}_2_cleanqt.fastq"),
+    output:
+        join(STAR_ALIGN,"{sample}_Aligned.out.sam"),
+        join(STAR_ALIGN,"{sample}_Log.final.out"),
+        join(STAR_ALIGN,"{sample}_Log.out"),
+        join(STAR_ALIGN,"{sample}_Log.progress.out"),
+    params:
+        prefix=join(STAR_ALIGN,"{sample}_"),
+    log:
+        join(LOG_DIR, "Star_aligned/{sample}_cleanqt.log")
+    threads:
+        20
+    resources:
+        cpus=20, mem_mb=80000
+    conda:
+        "../envs/star.yml"
+    shell:
+        """
+        STAR --runMode alignReads --runThreadN {threads} --genomeDir {input.ref} \
+            --outFileNamePrefix {params.prefix} --readFilesIn {input.R1} \
+            {input.R2} &> {log}
+        """
