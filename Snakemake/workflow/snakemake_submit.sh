@@ -11,4 +11,4 @@ set -e -u -o pipefail
 module load python/3.6-conda5.2
 source activate ipy-env
 
-snakemake -j1 -p
+snakemake -j"$SLURM_NTASKS" -p  
