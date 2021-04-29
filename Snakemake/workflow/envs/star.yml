@@ -1,5 +1,4 @@
-name: star_env
 channels:
 - bioconda
 dependencies:
-- star-env
+- star
