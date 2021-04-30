@@ -1,5 +1,5 @@
-in_dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw"
-out_dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/QC"
+in_dir="/<YOUR_DIR>/data_raw"
+out_dir="/<YOUR_DIR>/results/QC"
 
 for fastq in ${in_dir}/*_1.fastq ; do
     sample_ID=$(basename $fastq _1.fastq)
