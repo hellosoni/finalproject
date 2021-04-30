@@ -10,8 +10,9 @@ Download the SRA files from NCBI
 cd ~/<YOUROSCID>/<YOURDIR>/data_raw
 module load sratoolkit
 fastq-dump --split-files <SRA_READ_ID>
-
+```
 #Create .gitignore file for the SRAs:
+
 ```
 echo "~/<YOUROSCID>/<YOURDIR>/data_raw" > .gitignore
 echo "*fastq" >> .gitignore
