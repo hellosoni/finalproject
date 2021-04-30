@@ -14,9 +14,9 @@ bash ./bbmap/bbmerge.sh
 
 #Create .gitignore file for the softwares:
 
-echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/" > .gitignore
-echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/FastQC/" > .gitignore
-echo "/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/" > .gitignore
+echo "/<YOUR_DIR>/softwares/" > .gitignore
+echo "/<YOUR_DIR>/softwares/FastQC/" > .gitignore
+echo "/<YOUR_DIR>/softwares/bbmap/" > .gitignore
 git add .gitignore
 git commit -m "Added a gitignore for softwares folder"
 

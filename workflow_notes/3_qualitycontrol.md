@@ -4,13 +4,13 @@
 #Run FastQC
 mkdir QC
 module load fastqc/0.11.8
-fastqc --threads 2 /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_1.fastq /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/data_raw/*_2.fastq --outdir=QC 
+fastqc --threads 2 /<YOURDIR>/data_raw/*_1.fastq /<YOURDIR>/data_raw/*_2.fastq --outdir=QC 
 
 # Or alternately using the fastq_run script to run as SLURM job.
 
 
 #Add .gitignore for QC files
-echo "/fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/QC" > .gitignore
+echo "/<YOURDIR>/QC" > .gitignore
 echo "*html" >> .gitignore
 echo "*zip" >> .gitignore
 git add .gitignore

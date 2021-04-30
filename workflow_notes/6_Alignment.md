@@ -10,8 +10,8 @@ source activate star-env
 
 STAR --runThreadN 28 \
 --runMode genomeGenerate \
---genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
---genomeFastaFiles /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/refgenome/Gmax_275_v2.0.fa \
+--genomeDir /<YOURDIR>/STARindexed_ref \
+--genomeFastaFiles /<YOURDIR>/refgenome/Gmax_275_v2.0.fa \
 --genomeSAindexNbases 13
 
 #Note may be should submit script to SLURM using the star_submit.sh script
@@ -25,13 +25,13 @@ mkdir results
 cd results
 mkdir STAR
 
-STAR --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
+STAR --genomeDir /<YOURDIR>/STARindexed_ref \
 --runThreadN 20 \
 --runMode alignReads 
---readFilesIn /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/<READID>__cleanqt_1.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_cleanqt_2.fastq] \
---outFileNamePrefix /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/STAR/<READID>_, \
+--readFilesIn /<YOURDIR>/<READID>__cleanqt_1.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_cleanqt_2.fastq] \
+--outFileNamePrefix /<YOURDIR>/results/STAR/<READID>_, \
 --outSAMtype BAM SortedByCoordinate 
 
 ```
 
-#Additionally, use the starindex_submit.sh and star_submit.sh with runner scripts to run with more files. 
+
