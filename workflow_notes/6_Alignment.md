@@ -14,11 +14,6 @@ STAR --runThreadN 28 \
 --genomeFastaFiles /<YOURDIR>/refgenome/Gmax_275_v2.0.fa \
 --genomeSAindexNbases 13
 
-#Note may be should submit script to SLURM using the star_submit.sh script
-sbatch starindex_submit.sh
-
-chmod u+x starindex_submit
-
 
 # Run the mapping
 mkdir results
@@ -28,10 +23,8 @@ mkdir STAR
 STAR --genomeDir /<YOURDIR>/STARindexed_ref \
 --runThreadN 20 \
 --runMode alignReads 
---readFilesIn /<YOURDIR>/<READID>__cleanqt_1.fastq [/fs/ess/PAS1855/users/nghinguyen/FinalProject/no_duplicates/READID_cleanqt_2.fastq] \
---outFileNamePrefix /<YOURDIR>/results/STAR/<READID>_, \
---outSAMtype BAM SortedByCoordinate 
-
+--readFilesIn /<YOURDIR>/quality_trimmed/<READID>__cleanqt_1.fastq  /<YOURDIR>/quality_trimmed/READID_cleanqt_2.fastq \
+--outFileNamePrefix /<YOURDIR>/results/STAR/STARres/<READID>_, \
 ```
 
 
