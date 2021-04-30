@@ -1,12 +1,5 @@
 ## Data retrieval
 
-Logging in OSC
-
-```
-ssh your_OSC_ID@owens.osc.edu
-P@$SwOrD
-```
-
 Ask for computing resources:
 
 ```
@@ -16,10 +9,8 @@ Download the SRA files from NCBI
 ```
 cd ~/<YOUROSCID>/<YOURDIR>/data_raw
 module load sratoolkit
-fastq-dump --split-files SRR9113336
-fastq-dump --split-files SRR9113335
-fastq-dump --split-files SRR9113334
-```
+fastq-dump --split-files <SRA_READ_ID>
+
 #Create .gitignore file for the SRAs:
 ```
 echo "~/<YOUROSCID>/<YOURDIR>/data_raw" > .gitignore
