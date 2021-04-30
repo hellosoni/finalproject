@@ -1,26 +1,19 @@
 # This is the repository for the Final Project.
 
 ## Project overview:
-In this project, I used the transcriptomic data from Jahan et al., 2020 to rerun the RNA Seq pipeline according to the authors' methodology.  The authors used RNA sequencing technology in one of their experiments to identify the transcription factor candidates in the transformed Williams82 hairy roots and H63 seeds at their respective times of maximum glyceollin accumulation in response to cell wall glucan elicitor from *Phytophthora sojae*. By rerunning this pipeline for RNA Seq, I can gain more practical experience on running the pipeline for my own research project. The data of the project can be downloaded from NCBI using the accession # **GSE131686**.
+In this project, I used the transcriptomic data from Jahan et al., 2020 paper titled "Glyceollin Transcription Factor GmMYB29A2 Regulates Soybean Resistance to *Phytophthora sojae* to rerun the RNASeq pipeline according to the authors' methodology.  The authors used RNA sequencing technology in one of their experiments to identify the transcription factor candidates in the transformed Williams82 hairy roots and H63 seeds at their respective times of maximum glyceollin accumulation in response to cell wall glucan elicitor from *Phytophthora sojae*. By rerunning this pipeline for RNA Seq, I can gain more practical experience on running the pipeline for my own research project. The reads data of the project can be downloaded from NCBI using the accession # **GSE131686**.
 
 ## Set of Scripts:
-For each section of the pipeline, I created a set of scripts to run  on the SLURM job manager. Each of the script is accompanied by a runner script that include the detailed filepaths and the "for" loop that can be used to run the actual scripts with the set variables. Details of each script's functions is below. 
+For the overall pipeline, I created a set of scripts to run  on the SLURM job manager. Each of the script is accompanied by a runner script that include my detailed filepaths and the "for" loop that can be used to run the actual scripts with the set variables. All the scripts can be found in my /scripts folder. My pipeline is from data quality check using FastQC until the reads alignment step using Star aligner program. Details of each script's functions is below. 
 
-- "fastq_run.sh": This script include codes to check the sequence quality using FastQC. The runner script is "fastq_runner.sh".
-- "adapter_trimming.sh": This script include codes for trimming the adapters of the reads using bbduk program.The runner script is "adapter_trimmingrunner.sh"
-- "quality_trimming.sh": This script include codes for trimming the adapters of the reads using bbduk program.The runner script is "quality_trimmingrunner.sh"
-- "star_submit": This script include the codes to align the reads to the reference genome. The runner script is "star_runner"
-
+- "fastq_run.sh": This script is used to check the sequence quality using FastQC. The runner script is "fastq_runner.sh".
+- "adapter_trimming.sh": This script is used to trim the adapters of the reads using bbduk program.The runner script is "adapter_trimmingrunner.sh"
+- "quality_trimming.sh": This script is used to trim the adapters of the reads using bbduk program.The runner script is "quality_trimmingrunner.sh"
+-"starindex_submit.sh": This script is used to index the soybean reference genome fasta file (Gmax_275_v2.0.fa). 
+- "star_submit": This script is used to align the reads to the reference genome. The runner script is "star_runner".
 
 ## Snakemake pipepine
-For Snakemake pipeline, I created a Snakefile with inputs, outputs and include the the scripts created above to run the entire pipeline. Then I also created a script named "snakemake_submit.sh" to run the Snakemake pipeline in SLURM. Both of these can be found in the "/Snakemake/workflow" folder. I also created two files fastqc.yml and star.yml in the "workflow/env/" folder that contains information for calling the two programs in SNakemake files.
+For Snakemake pipeline, I created a single Snakefile scripts with inputs, outputs and the command for Fastqc, adapter trimming, quality trimming, indexing reference genome and mapping reads using Star program similar to the above pipeline.
 
-#Setting for the file paths I used are below. They can be replaced with your own directories. 
+I created the config.yaml file include the input, output and log directories to accompany the Snakefile while running.   Then I created a script named "snakemake_submit.sh" to run the Snakemake pipeline in SLURM. Both of these can be found in the "/Snakemake/workflow" folder.I also created two files fastqc.yml and star.yml in the "Snakemake/workflow/env/" folder that contains information for calling the two programs in Snakemake files.
 
-BASE_DIR ="/fs/ess/PAS1855/users/nghinguyen/FinalProject/"
-
-BBDUK = BASE_DIR + "softwares/bbmap/"
-
-ADAPTER= BASE_DIR + "/softwares/bbmap/resources/adapters.fa"
-
-REF_FA = BASE_DIR + "/data_raw/refgenome/Gmax_275_v2.0.fa"
