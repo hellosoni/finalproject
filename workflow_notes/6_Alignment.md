@@ -23,7 +23,7 @@ mkdir STAR
 STAR --genomeDir /<YOURDIR>/STARindexed_ref \
 --runThreadN 20 \
 --runMode alignReads 
---readFilesIn /<YOURDIR>/quality_trimmed/<READID>__cleanqt_1.fastq  /<YOURDIR>/quality_trimmed/READID_cleanqt_2.fastq \
+--readFilesIn /<YOURDIR>/quality_trimmed/<READID>__cleanqt_1.fastq  /<YOURDIR>/quality_trimmed/<READID>_cleanqt_2.fastq \
 --outFileNamePrefix /<YOURDIR>/results/STAR/STARres/<READID>_, \
 ```
 
