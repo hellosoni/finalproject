@@ -5,18 +5,18 @@
 qsub -I -l nodes=1:ppn=28 -l walltime=04:00:00 -A PAS1855
 
 #Make trimmed directory
-cd ~/FinalProject
+cd <YOUR_DIR>
 mkdir trimming no_duplicates
 #Note: There is adapter reference in bbmap/resources/
 
 #Adapter Trimming
 
-/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/bbduk.sh -Xmx1g in1=$i\_1.fastq in2=$i\_2.fastq out1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/${i##*/}\_clean_1.fastq out2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/${i##*/}\_clean_2.fastq ref=/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/resources/adapters.fa
+<YOUR_DIR>/softwares/bbmap/bbduk.sh in1=<YOUR_DIR>/<READ_ID>_1.fastq in2=<READ_ID>_2.fastq out1=/<YOUR_DIR>/results/trimmed/<READ_ID>_clean_1.fastq out2=/<YOUR_DIR>/<READ_ID>_clean_2.fastq ref=/<YOUR_DIR>/softwares/bbmap/resources/adapters.fa
  ktrim=r k=23 mink=11 hdist=1 tpe tbo
 
 
 #Quality trimming
-fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/bbduk.sh  in1=$i\_clean_1.fastq in2=$i\_clean_2.fastq out1=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/${i##*/}\_cleanqt_1.fastq out2=/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed/${i##*/}\_cleanqt_2.fastq qtrim=r trimq=10
+<YOUR_DIR>/softwares/bbmap/bbduk.sh  in1=<YOUR_DIR>/<READ_ID>_clean_1.fastq in2=<YOUR_DIR>/<READ_ID>_clean_2.fastq out1=/<YOUR_DIR>/results/trimmed/quality_trimmed/<READ_ID>_cleanqt_1.fastq out2=/<YOUR_DIR>/results/trimmed/quality_trimmed/<READ_ID>_cleanqt_2.fastq qtrim=r trimq=10
 
 
 

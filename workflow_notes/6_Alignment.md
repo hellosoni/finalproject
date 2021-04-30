@@ -1,4 +1,4 @@
-# Alignment with STAR aligner
+# Alignment with STAR aligner for single paired reads
 
 ```
 #Generate genome indexes of the reference genome
@@ -32,8 +32,6 @@ STAR --genomeDir /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/STARindexed_ref \
 --outFileNamePrefix /fs/ess/PAS1855/users/<YOUROSCID>/<YOURDIR>/results/STAR/<READID>_, \
 --outSAMtype BAM SortedByCoordinate 
 
-#Again, make a star_submit.sh file to submit as a SLURM job
-sbatch star_submit.sh
 ```
 
-
+#Additionally, use the starindex_submit.sh and star_submit.sh with runner scripts to run with more files. 
