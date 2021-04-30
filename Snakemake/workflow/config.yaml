@@ -1,3 +1,3 @@
-in_dir: "/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake/data/"
-out_dir: "/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake/results/"
-log_dir: "/fs/ess/PAS1855/users/nghinguyen/FinalProject/Snakemake/log/"
+in_dir: "data"
+out_dir: "results"
+log_dir: "log"
