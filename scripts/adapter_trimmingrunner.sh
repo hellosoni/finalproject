@@ -1,7 +1,7 @@
-in_dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/data_raw"
-bbduk="/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap"
-out_dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/adapter_trimmed"
-ref="/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap/resources/adapters.fa"
+in_dir="<YOUR_DIR>/data_raw"
+bbduk="<YOUR_DIR>/softwares/bbmap"
+out_dir="/<YOUR_DIR>/results/trimmed/adapter_trimmed"
+ref="<YOUR_DIR>/softwares/bbmap/resources/adapters.fa"
 
 
 for fastq in ${in_dir}/*_1.fastq ; do

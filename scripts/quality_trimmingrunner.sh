@@ -1,6 +1,6 @@
-in_dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/adapter_trimmed"
-bbduk="/fs/ess/PAS1855/users/nghinguyen/FinalProject/softwares/bbmap"
-out_dir="/fs/ess/PAS1855/users/nghinguyen/FinalProject/results/trimmed/quality_trimmed"
+in_dir="/<YOUR_DIR>/results/trimmed/adapter_trimmed"
+bbduk="/<YOUR_DIR>/softwares/bbmap"
+out_dir="/<YOUR_DIR>/results/trimmed/quality_trimmed"
 
 
 for fastq in ${in_dir}/*_clean_1.fastq ; do
